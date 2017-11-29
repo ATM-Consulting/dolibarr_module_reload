@@ -334,7 +334,7 @@ class modReloadCustom extends DolibarrModules
 		define('INC_FROM_DOLIBARR',true);
 
 		dol_include_once('/reloadcustom/config.php');
-		dol_include_once('/reloadcustom/script/create-maj-base.php');
+		dol_include_once('/reloadcustom/script/reload.php');
 
 		$result=$this->_load_tables('/reloadcustom/sql/');
 
