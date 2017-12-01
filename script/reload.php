@@ -6,6 +6,11 @@
 	
 	unset($conf->file->dol_document_root['main']);
 	$modulesdir = dolGetModulesDirs();
+
+	if(!empty($conf->history->enabled)) {
+                unset($conf->history->enabled, $conf->global->MAIN_MODULE_HISTORY);
+                $resarray = activateModule('modHistory');
+        }
 	
 	foreach ($modulesdir as $dir)
 	{
