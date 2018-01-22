@@ -18,11 +18,17 @@
             $TEntities[$obj->rowid] = $obj->label;
         }
     }
-    
-    foreach ($TEntities as $e => $label){
-        $object = new ActionsMulticompany($db);
-        $ret = $object->switchEntity($e);
-        echo '<h2>'.$label.'</h2>';
+
+    $object = new ActionsMulticompany($db);
+    $ret = $object->switchEntity(1);
+    $conf->setValues($db);
+//    foreach ($TEntities as $e => $label){
+//        $object = new ActionsMulticompany($db);
+//        $ret = $object->switchEntity($e);
+
+//	$conf->entity = $e;
+
+//        echo '<h2>'.$label.'</h2>';
         
         if(!empty($conf->history->enabled)) {
             unset($conf->history->enabled, $conf->global->MAIN_MODULE_HISTORY);
@@ -51,9 +57,14 @@
                             echo $name.'<br>';
                             
                             //$res = unActivateModule($modName);
+
+			   foreach ($TEntities as $e => $label){
+			    $conf->entity = $e;
                             unset($conf->{$name}->enabled, $conf->global->{'MAIN_MODULE_'.strtoupper($name)});
                             $resarray = activateModule($modName);
                             //var_dump($res, $resarray);exit;
+
+		           }
                         }
                         
                     }
@@ -63,5 +74,9 @@
             }
             
         }
-    }
+  //  }
     
+  
+    $object = new ActionsMulticompany($db);
+    $ret = $object->switchEntity(1);
+    $conf->setValues($db);
