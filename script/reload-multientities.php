@@ -61,6 +61,7 @@ foreach ($modulesdir as $dir) {
                 $modName = substr($file, 0, dol_strlen($file) - 10);
 
                 $name = strtolower(preg_replace('/^mod/i', '', $modName));
+                if($name == 'propale') $name = 'propal';
 
                 if (! empty($conf->{$name}->enabled)) {
                     echo $name.'<br>';
@@ -70,8 +71,8 @@ foreach ($modulesdir as $dir) {
                     foreach ($TEntities as $e => $label) {
                         $conf->entity = $e;
                         unset($conf->{$name}->enabled, $conf->global->{'MAIN_MODULE_'.strtoupper($name)});
+                        if($name == 'propal') unset($conf->global->MAIN_MODULE_PROPALE);
                         $resarray = activateModule($modName);
-
                     }
                 }
             }
