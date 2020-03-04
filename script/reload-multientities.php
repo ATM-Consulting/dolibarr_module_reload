@@ -42,6 +42,8 @@ if ($res) {
     }
 }
 
+$oldEntity = $conf->entity;
+
 $object = new ActionsMulticompany($db);
 $ret = $object->switchEntity(1);
 $conf->setValues($db);
@@ -54,6 +56,7 @@ if (! empty($conf->history->enabled)) {
 foreach ($modulesdir as $dir) {
     // Load modules attributes in arrays (name, numero, orders) from dir directory
     dol_syslog("Scan directory ".$dir." for module descriptor files (modXXX.class.php)");
+
     $handle = @opendir($dir);
     if (is_resource($handle)) {
         while (($file = readdir($handle)) !== false) {
@@ -66,10 +69,12 @@ foreach ($modulesdir as $dir) {
                 if (! empty($conf->{$name}->enabled)) {
                     echo $name.'<br>';
 
-                    //$res = unActivateModule($modName);
-
                     foreach ($TEntities as $e => $label) {
-                        $conf->entity = $e;
+                        $ret = $object->switchEntity($e);
+                        $conf->setValues($db);
+
+//                        $res = unActivateModule($modName);
+
                         unset($conf->{$name}->enabled, $conf->global->{'MAIN_MODULE_'.strtoupper($name)});
                         if($name == 'propal') unset($conf->global->MAIN_MODULE_PROPALE);
                         $resarray = activateModule($modName);
@@ -80,6 +85,5 @@ foreach ($modulesdir as $dir) {
     }
 }
 
-$object = new ActionsMulticompany($db);
-$ret = $object->switchEntity(1);
+$ret = $object->switchEntity($oldEntity);
 $conf->setValues($db);
