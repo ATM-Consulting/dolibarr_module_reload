@@ -7,6 +7,13 @@ dol_include_once("/multicompany/class/actions_multicompany.class.php");
 
 set_time_limit(0);
 
+
+// Security check
+if (empty($user->admin)){
+	die('Administrator only');
+}
+
+
 // Recopie des conf de l'entité 1 sur les autres entités
 $sql = 'INSERT IGNORE INTO llx_const (name, entity, value, type, visible, note) ';
 $sql .= 'SELECT c.name, e.rowid, c.value, c.type, c.visible, c.note ';
