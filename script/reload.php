@@ -1,6 +1,6 @@
 <?php
 
-	require '../config.php';
+	require __DIR__ . '/../config.php';
 
 	require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 
