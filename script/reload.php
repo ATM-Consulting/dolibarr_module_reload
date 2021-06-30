@@ -31,7 +31,7 @@
 
 
 	$TModuleToReload = array();
-
+	$countToReload = 0;
 	foreach ($modulesdir as $dir)
 	{
 		// Load modules attributes in arrays (name, numero, orders) from dir directory
@@ -50,19 +50,21 @@
 					$modToReload->name  = strtolower(preg_replace('/^mod/i','',$modToReload->modName));
 					$modToReload->enabled  = !empty($conf->{$modToReload->name}->enabled);
 
+					if($modToReload->enabled){
+						$countToReload++;
+					}
+
 					$TModuleToReload[$modToReload->name] = $modToReload;
 				}
 			}
 		}
 	}
 
-
-
 	if(!empty($TModuleToReload)) {
 
 		// premiere étape désactivation des modules
 		if(!empty($unActivate)) {
-			echo '<h6>Disable : '.count($TModuleToReload).'</h6>';
+			echo '<h4>Disable : '.$countToReload.'</h4>';
 			foreach ($TModuleToReload as $modToReload) {
 				if (!empty($modToReload->enabled)) {
 					echo $modToReload->name . '<br>';
@@ -72,7 +74,7 @@
 			}
 		}
 
-		echo '<h6>Activate : '.count($TModuleToReload).'</h6>';
+		echo '<h4>Activate : '.$countToReload.'</h4>';
 		// deuxime etape activation de tous les modules necessaire
 		foreach ($TModuleToReload as $modToReload)
 		{
