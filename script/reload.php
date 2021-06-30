@@ -29,10 +29,12 @@
                 $resarray = activateModule('modHistory');
         }
 
+
+	$TModuleToReload = array();
+
 	foreach ($modulesdir as $dir)
 	{
 		// Load modules attributes in arrays (name, numero, orders) from dir directory
-		//print $dir."\n<br>";
 		dol_syslog("Scan directory ".$dir." for module descriptor files (modXXX.class.php)");
 		$handle=@opendir($dir);
 		if (is_resource($handle))
@@ -42,26 +44,42 @@
 				//print "$i ".$file."\n<br>";
 				if (is_readable($dir.$file) && substr($file, 0, 3) == 'mod'  && substr($file, dol_strlen($file) - 10) == '.class.php')
 				{
-					$modName = substr($file, 0, dol_strlen($file) - 10);
 
-					$name = strtolower(preg_replace('/^mod/i','',$modName));
+					$modToReload = new stdClass();
+					$modToReload->modName  = substr($file, 0, dol_strlen($file) - 10);
+					$modToReload->name  = strtolower(preg_replace('/^mod/i','',$modToReload->modName));
+					$modToReload->enabled  = !empty($conf->{$modToReload->name}->enabled);
 
-					if(!empty($conf->{$name}->enabled)) {
-
-						echo $name.'<br>';
-
-						if(!empty($unActivate)){
-							$res = unActivateModule($modName, $dependency);
-						}
-						unset($conf->{$name}->enabled, $conf->global->{'MAIN_MODULE_'.strtoupper($name)});
-						$resarray = activateModule($modName);
-						//var_dump($res, $resarray);exit;
-					}
-
+					$TModuleToReload[$modToReload->name] = $modToReload->name;
 				}
-
 			}
+		}
+	}
 
+
+
+	if(!empty($TModuleToReload)) {
+
+		// premiere étape désactivation des modules
+		if(!empty($unActivate)) {
+			echo '<h6>Disable : '.'</h6>';
+			foreach ($TModuleToReload as $modToReload) {
+				if (!empty($modToReload->enabled)) {
+					echo $modToReload->name . '<br>';
+					$res = unActivateModule($modToReload->modName, $dependency);
+					unset($conf->{$modToReload->name}->enabled, $conf->global->{'MAIN_MODULE_' . strtoupper($modToReload->name)});
+				}
+			}
 		}
 
+		echo '<h6>Activate : '.'</h6>';
+		// deuxime etape activation de tous les modules necessaire
+		foreach ($TModuleToReload as $modToReload)
+		{
+			if(!empty($modToReload->enabled)) {
+				echo $modToReload->name.'<br>';
+				$resarray = activateModule($modToReload->modName);
+			}
+		}
 	}
+
