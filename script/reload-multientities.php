@@ -13,6 +13,14 @@ if (empty($user->admin)){
 	die('Administrator only');
 }
 
+// Add un activate option
+$unActivate = GETPOST('unactivate','int');
+
+// Manage dependency
+$dependency = 1;
+if(GETPOSTISSET('dependency')){
+	$dependency = GETPOST('dependency','int');
+}
 
 // Recopie des conf de l'entité 1 sur les autres entités
 $sql = 'INSERT IGNORE INTO llx_const (name, entity, value, type, visible, note) ';
@@ -80,7 +88,9 @@ foreach ($modulesdir as $dir) {
                         $ret = $object->switchEntity($e);
                         $conf->setValues($db);
 
-//                        $res = unActivateModule($modName);
+						if(!empty($unActivate)){
+							$res = unActivateModule($modName, $dependency);
+						}
 
                         unset($conf->{$name}->enabled, $conf->global->{'MAIN_MODULE_'.strtoupper($name)});
                         if($name == 'propal') unset($conf->global->MAIN_MODULE_PROPALE);
