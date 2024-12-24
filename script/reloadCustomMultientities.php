@@ -49,8 +49,12 @@ if (!empty($entities)) {
                 $enabledModules = $actionsMulticompany->dao->getEntityConfig($fkEntity);
 
                 foreach ($customModulesDirs as $dir) {
+
                     //url param "modules" to specify list of modules to reload. Each module must be separate by "|"
-                    if(!preg_match('#/custom/('.GETPOST('modules', 'alphanohtml').')#', $dir)) continue;
+                    $modulestoreload = GETPOST('modules', 'alphanohtml');
+                    if (!empty($modulestoreload)) {
+                        if(!preg_match('#/custom/('.GETPOST('modules', 'alphanohtml').')#', $dir)) continue;
+                    }
 
                     print '<div style="margin-left: 20px; border: 1px solid #eee; padding: 5px;">';
                     print '--- START MODULES ' . $dir . '<br>';
