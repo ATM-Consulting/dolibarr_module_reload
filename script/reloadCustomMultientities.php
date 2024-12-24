@@ -53,7 +53,7 @@ if (!empty($entities)) {
                     //url param "modules" to specify list of modules to reload. Each module must be separate by "|"
                     $modulestoreload = GETPOST('modules', 'alphanohtml');
                     if (!empty($modulestoreload)) {
-                        if(!preg_match('#/custom/('.GETPOST('modules', 'alphanohtml').')#', $dir)) continue;
+                        if(!preg_match('#/custom/('.$modulestoreload.')#', $dir)) continue;
                     }
 
                     print '<div style="margin-left: 20px; border: 1px solid #eee; padding: 5px;">';
