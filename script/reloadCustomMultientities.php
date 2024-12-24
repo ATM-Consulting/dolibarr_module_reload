@@ -17,7 +17,7 @@ function displayInfo($message) {
 
 // Récupérer les entités
 $entities = [];
-$sql = 'SELECT rowid, label FROM '.MAIN_DB_PREFIX.'entity ORDER BY rowid ASC';
+$sql = 'SELECT rowid, label FROM '.MAIN_DB_PREFIX.'entity WHERE active = 1 AND visible = 1 ORDER BY rowid ASC';
 $res = $db->query($sql);
 if ($res) {
     while ($obj = $db->fetch_object($res)) {
@@ -49,6 +49,13 @@ if (!empty($entities)) {
                 $enabledModules = $actionsMulticompany->dao->getEntityConfig($fkEntity);
 
                 foreach ($customModulesDirs as $dir) {
+
+                    //url param "modules" to specify list of modules to reload. Each module must be separate by "|". Exemple : ?modules=module1|module2|module3
+                    $modulestoreload = GETPOST('modules', 'alphanohtml');
+                    if (!empty($modulestoreload)) {
+                        if(!preg_match('#/('.$modulestoreload.')#', $dir)) continue;
+                    }
+
                     print '<div style="margin-left: 20px; border: 1px solid #eee; padding: 5px;">';
                     print '--- START MODULES ' . $dir . '<br>';
 
