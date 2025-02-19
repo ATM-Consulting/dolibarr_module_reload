@@ -17,7 +17,7 @@ function displayInfo($message) {
 
 // Récupérer les entités
 $entities = [];
-$sql = 'SELECT rowid, label FROM '.MAIN_DB_PREFIX.'entity WHERE active = 1 AND visible = 1 ORDER BY rowid ASC';
+$sql = 'SELECT rowid, label FROM '.MAIN_DB_PREFIX.'entity WHERE active = 1 AND visible IN (1,2) ORDER BY rowid ASC';
 $res = $db->query($sql);
 if ($res) {
     while ($obj = $db->fetch_object($res)) {
